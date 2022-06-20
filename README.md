@@ -1,13 +1,20 @@
 # rollup-plugin-mocha
 
 [![npm](https://img.shields.io/npm/v/rollup-plugin-mocha.svg)](https://www.npmjs.com/package/rollup-plugin-mocha)
+[![Node.js CI](https://github.com/Arnesfield/rollup-plugin-mocha/workflows/Node.js%20CI/badge.svg)](https://github.com/Arnesfield/rollup-plugin-mocha/actions?query=workflow%3A"Node.js+CI")
 
 A Rollup plugin wrapper for [Mocha](https://github.com/mochajs/mocha).
 
 ## Install
 
 ```sh
-npm install --save-dev mocha rollup-plugin-mocha
+npm install --save-dev rollup-plugin-mocha
+```
+
+Install [Mocha](https://github.com/mochajs/mocha) if you haven't already:
+
+```sh
+npm install --save-dev mocha
 ```
 
 ## Usage
@@ -30,7 +37,10 @@ import mocha from 'rollup-plugin-mocha';
 
 export default {
   input: 'test/index.spec.js',
-  output: { file: 'tmp/test.cjs', format: 'cjs' },
+  output: {
+    file: 'tmp/test.cjs',
+    format: 'cjs'
+  },
   plugins: [mocha()]
 };
 ```
@@ -46,11 +56,17 @@ import mocha from 'rollup-plugin-mocha';
 export default {
   // typescript multiple spec files
   // as input under the `test/` directory
-  input: 'test/**/**.spec.ts',
-  output: { dir: 'tmp', format: 'cjs', entryFileNames: '[name].cjs' },
-  plugins: [mocha(), multi(), esbuild({ minify: true })]
+  input: 'test/**/*.spec.ts',
+  output: {
+    dir: 'tmp',
+    format: 'cjs',
+    entryFileNames: '[name].cjs'
+  },
+  plugins: [mocha(), multi(), esbuild()]
 };
 ```
+
+> **Note**: This does not include any type checking or linting. You can check other plugins for this such as [@rollup/plugin-typescript](https://github.com/rollup/plugins/tree/master/packages/typescript) and [@rollup/plugin-eslint](https://github.com/rollup/plugins/tree/master/packages/eslint).
 
 With these examples, you can add a script using [Rollup](https://github.com/rollup/rollup) to your `package.json`:
 
@@ -103,12 +119,12 @@ mocha({
   /**
    * This callback is fired when `mocha.run()` is called.
    */
-  runner: (runner: Mocha.Runner, mocha: Mocha) => {},
+  runner: async (runner: Mocha.Runner, mocha: Mocha): Promise<void> => {},
 
   /**
    * This callback is fired once everything is settled.
    */
-  finally: (mocha: Mocha) => {}
+  finally: async (mocha: Mocha): Promise<void> => {}
 });
 ```
 
@@ -206,6 +222,12 @@ await api.run(mocha.run());
 // delete files
 await api.removeFiles(files, force);
 ```
+
+## Disclaimer
+
+The [author](https://github.com/Arnesfield) of this package does not have sufficient experience working with [Mocha](https://github.com/mochajs/mocha). This explains why the API of this plugin is very minimal when it comes to working with Mocha as it mostly does not attempt to directly tinker with the Mocha instance or load any options. Instead, consumers can [set it up](#setup-callback) themselves.
+
+Feel free to contribute if there are issues or any features that would greatly improve the functionality and experience of this plugin. It would mean a lot, thank you!
 
 ## License
 
