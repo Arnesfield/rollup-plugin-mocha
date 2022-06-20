@@ -70,6 +70,12 @@ export interface RollupMochaOptions {
    */
   instance?(): Mocha | Promise<Mocha>;
   /**
+   * Filter files that will be added to the Mocha instance.
+   * @param files The files to filter.
+   * @returns The filtered files.
+   */
+  filterFiles?(files: string[]): string[];
+  /**
    * This callback is fired when `mocha.run()` is called.
    * @param runner The Mocha Runner.
    * @param mocha The Mocha instance.

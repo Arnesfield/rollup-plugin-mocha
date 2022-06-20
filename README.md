@@ -96,6 +96,11 @@ mocha({
   instance: () => new Mocha(),
 
   /**
+   * Filter files that will be added to the Mocha instance.
+   */
+  filterFiles: (files: string[]) => files,
+
+  /**
    * This callback is fired when `mocha.run()` is called.
    */
   runner: (runner: Mocha.Runner, mocha: Mocha) => {},

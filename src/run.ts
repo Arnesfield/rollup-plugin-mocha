@@ -17,7 +17,8 @@ export async function run(
   if (!options.cache) {
     api.noCache(mocha);
   }
-  const files = api.getFiles(bundle);
+  const allFiles = api.getFiles(bundle);
+  const files = options.filterFiles ? options.filterFiles(allFiles) : allFiles;
   api.addFiles(files, mocha);
   try {
     const runner = mocha.run();
