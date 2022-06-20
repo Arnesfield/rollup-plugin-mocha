@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/rollup-plugin-mocha.svg)](https://www.npmjs.com/package/rollup-plugin-mocha)
 
-A Rollup plugin that wraps [mocha](https://github.com/mochajs/mocha).
+A Rollup plugin wrapper for [Mocha](https://github.com/mochajs/mocha).
 
 ## Install
 
@@ -35,7 +35,7 @@ export default {
 };
 ```
 
-Use the plugin with [esbuild](https://github.com/evanw/esbuild) [rollup plugin](https://github.com/egoist/rollup-plugin-esbuild) and [multi-entry](https://github.com/rollup/plugins/tree/master/packages/multi-entry):
+Use the plugin with [esbuild](https://github.com/evanw/esbuild) [Rollup plugin](https://github.com/egoist/rollup-plugin-esbuild) and [multi-entry](https://github.com/rollup/plugins/tree/master/packages/multi-entry):
 
 ```javascript
 // rollup-test.config.js
@@ -52,7 +52,7 @@ export default {
 };
 ```
 
-With these examples, you can add a script using [rollup](https://github.com/rollup/rollup) to your `package.json`:
+With these examples, you can add a script using [Rollup](https://github.com/rollup/rollup) to your `package.json`:
 
 ```json
 {

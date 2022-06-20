@@ -4,20 +4,20 @@ import { run } from './run';
 import { RollupMochaOptions, RollupMochaSetup } from './types';
 
 /**
- * Wrap Mocha with a Rollup plugin.
+ * Rollup plugin wrapper for Mocha.
  * @returns The plugin.
  */
 export function mocha(): Plugin;
 
 /**
- * Wrap Mocha with a Rollup plugin.
+ * Rollup plugin wrapper for Mocha.
  * @param setup Callback to manually setup Mocha. Should throw an error if tests fail.
  * @returns The plugin.
  */
 export function mocha(setup: RollupMochaSetup): Plugin;
 
 /**
- * Wrap Mocha with a Rollup plugin.
+ * Rollup plugin wrapper for Mocha.
  * @param options The plugin options.
  * @returns The plugin.
  */
