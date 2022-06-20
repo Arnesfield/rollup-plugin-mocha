@@ -47,7 +47,7 @@ export default {
   // typescript multiple spec files
   // as input under the `test/` directory
   input: 'test/**/**.spec.ts',
-  output: { file: 'tmp/test.cjs', format: 'cjs' },
+  output: { dir: 'tmp', format: 'cjs', entryFileNames: '[name].cjs' },
   plugins: [mocha(), multi(), esbuild({ minify: true })]
 };
 ```
@@ -123,11 +123,11 @@ By default, this is how it would look like:
 mocha(async (api: RollupMochaApi, bundle: OutputBundle) => {
   const mocha = api.instance(); // or create Mocha instance yourself
   const files = api.getFiles(bundle); // or get the files yourself
-  api
-    .noCache(mocha) // sets up cache delete from `require.cache`
-    .addFiles(files, mocha); // or add files yourself
   try {
-    await api.run(mocha.run()); // or handle `mocha.run()` yourself
+    await api
+      .noCache(mocha) // sets up cache delete from `require.cache`
+      .addFiles(files, mocha) // or add files yourself
+      .run(mocha.run()); // or handle `mocha.run()` yourself
   } finally {
     await api.removeFiles(files); // or remove files yourself
   }
