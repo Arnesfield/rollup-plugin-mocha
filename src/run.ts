@@ -19,8 +19,8 @@ export async function run(
   }
   const allFiles = api.getFiles(bundle);
   const files = options.filterFiles ? options.filterFiles(allFiles) : allFiles;
-  api.addFiles(files, mocha);
   try {
+    api.addFiles(files, mocha);
     const runner = mocha.run();
     if (options.runner) await options.runner(runner, mocha);
     await api.run(runner);
