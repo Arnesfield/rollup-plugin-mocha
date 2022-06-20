@@ -1,4 +1,4 @@
-import { unlink } from 'fs';
+import { stat, unlink } from 'fs';
 import Mocha from 'mocha';
 import { basename, dirname, join } from 'path';
 import { NormalizedOutputOptions, OutputBundle } from 'rollup';
@@ -45,7 +45,7 @@ export class RollupMochaApiClass implements RollupMochaApi {
     return this;
   }
 
-  async removeFiles(files: string[], force = false): Promise<void> {
+  protected validateFiles(files: string[], force = false): void {
     // make sure files are within the directory
     let didLogDir = false;
     for (const file of files) {
@@ -68,8 +68,19 @@ export class RollupMochaApiClass implements RollupMochaApi {
         file
       );
     }
+  }
+
+  async removeFiles(files: string[], force = false): Promise<void> {
+    this.validateFiles(files, force);
     // remove files only after validation
-    const promises = files.map(file => {
+    const promises = files.map(async file => {
+      // remove only if file exists
+      const exists = await new Promise<boolean>(resolve => {
+        stat(file, error => resolve(!error));
+      });
+      if (!exists) {
+        return;
+      }
       return new Promise<void>((resolve, reject) => {
         unlink(file, error => (error ? reject(error) : resolve()));
       });
