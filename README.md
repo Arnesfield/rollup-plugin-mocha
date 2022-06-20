@@ -138,73 +138,74 @@ An [API instance](#api-instance) is passed to the [setup callback](#setup-callba
 
 ### API Instance
 
-The **API instance** contains the wrapper logic to run the plugin.
+The **API instance** contains the wrapper logic that runs the plugin by default.
 
-- `dir: string`
+```typescript
+interface RollupMochaApi {
+  /**
+   * Output directory path.
+   */
+  readonly dir: string;
 
-  The output directory path.
+  /**
+   * Create a Mocha instance (without options).
+   */
+  instance(): Mocha;
 
-  ```javascript
-  console.log(api.dir);
-  ```
+  /**
+   * Clear cache from `require.cache` to enable rerunning tests in watch mode.
+   * @see https://github.com/mochajs/mocha/issues/995#issuecomment-365441585
+   */
+  noCache(mocha: Mocha): this;
 
-- `instance(): Mocha`
+  /**
+   * Get the generated file paths from the output bundle.
+   */
+  getFiles(bundle: OutputBundle): string[];
 
-  Returns a `Mocha` instance (without options).
+  /**
+   * Add files to the Mocha instance.
+   */
+  addFiles(files: string[], mocha: Mocha): this;
 
-  ```javascript
-  const mocha = api.instance();
-  ```
+  /**
+   * Delete files from system. File paths should only be within
+   * the output directory (`dir`). Otherwise, an error is thrown.
+   */
+  removeFiles(files: string[], force?: boolean): Promise<void>;
 
-- `noCache(mocha: Mocha): this`
+  /**
+   * Adds an `end` event listener to the runner.
+   * An error is thrown if there are `failures`.
+   */
+  run(runner: Mocha.Runner): Promise<void>;
+}
+```
 
-  Clears cache from `require.cache` to enable rerunning tests in Rollup watch mode.
+To sum up:
 
-  > Note that this is taken from a [GitHub comment](https://github.com/mochajs/mocha/issues/995#issuecomment-365441585), thank you for this!
+```javascript
+// log output directory
+console.log(api.dir);
 
-  ```javascript
-  api.noCache(mocha);
-  ```
+// create instance (without options)
+const mocha = api.instance();
 
-  If it does not work for you, you can handle this yourself.
+// apply no cache
+api.noCache(mocha);
 
-- `getFiles(bundle: OutputBundle): string[]`
+// get files from bundle
+const files = api.getFiles(bundle);
 
-  Returns the generated file paths from the output bundle.
+// add files to Mocha instance
+api.addFiles(files, mocha);
 
-  ```javascript
-  api.getFiles(bundle);
-  ```
+// add `end` event listener, throws an error if tests have `failures`
+await api.run(mocha.run());
 
-- `addFiles(files: string[], mocha: Mocha): this`
-
-  Add files to the Mocha instance (`mocha.addFile(file)`).
-
-  ```javascript
-  api.addFiles(files, mocha);
-  ```
-
-- `removeFiles(files: string[], force?: boolean): Promise<void>`
-
-  Delete files from system. File paths should only be within the output directory (`api.dir`). Otherwise, an error is thrown.
-
-  ```javascript
-  await api.removeFiles(files);
-  ```
-
-  Allow deleting files that are outside of the output directory by passing `true` to the `force` param.
-
-  ```javascript
-  await api.removeFiles(files, true);
-  ```
-
-- `run(runner: Mocha.Runner): Promise<void>`
-
-  Adds an `end` event listener to the runner. An error is thrown if there are `failures`.
-
-  ```javascript
-  await api.run(mocha.run());
-  ```
+// delete files
+await api.removeFiles(files, force);
+```
 
 ## License
 
